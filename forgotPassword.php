@@ -1,11 +1,11 @@
 <?php
 session_start();
 
-// Database connection setup (AWS parameters)
-$servername = "your-aws-rds-endpoint";  // Replace with your AWS RDS endpoint
-$username = "your-aws-username";        // Replace with your AWS RDS username
-$password = "your-aws-password";        // Replace with your AWS RDS password
-$dbname = "your-database-name";         // Replace with your AWS database name
+// AWS Database connection setup
+$servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";  // AWS RDS endpoint
+$username = "admin";                                               // AWS username
+$password = "RootUserPassword123!#";                               // AWS password
+$dbname = "Project";                                               // AWS database name
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {

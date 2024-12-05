@@ -1,8 +1,8 @@
 <?php
 // config.php
-$dsn = 'mysql:host=localhost;dbname=your_database';
-$username = 'root'; // Use your DB username
-$password = ''; // Use your DB password
+$dsn = 'project.cac1orfaomky.us-east-1.rds.amazonaws.com';
+$username = 'admin'; // Use your DB username
+$password = 'RootUserPassword123!#'; // Use your DB password
 
 try {
     $pdo = new PDO($dsn, $username, $password);
