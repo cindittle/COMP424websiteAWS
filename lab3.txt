@@ -1,11 +1,14 @@
-# User Authentication and Session Management Web Application
+COMP 424 - Group Project Part 2: Webpage
+============================================
 
-## Project Description
-This project is a full-stack web application designed to allow users to register, log in, and manage their sessions securely. Key functionalities include user registration, login, session management, logout, and a password recovery system. The application uses PHP, MySQL (or AWS for the database), HTML, JavaScript, and CSS for both front-end and back-end development.
+Project Description:
+---------------------
+This project is a full-stack web application designed to allow users to register, log in, and manage their sessions securely. Key functionalities include user registration, login, 
+session management, logout, and a password recovery system. The application uses PHP, MySQL (or AWS for the database), HTML, JavaScript, and CSS for both front-end and back-end 
+development.
 
----
-
-## File Descriptions
+File Descriptions:
+---------------------
 
 1. **index.html**
    - This is the main HTML file containing both the user registration and login forms.
@@ -50,24 +53,22 @@ This project is a full-stack web application designed to allow users to register
    - A confidential file that logged-in users can download from `index.php`.
    - This file is only accessible to authenticated users as per project security requirements.
 
----
+Completion Status:
+---------------------
+- User registration: complete
+- User login: complete
+- Logout function: complete
+- Forgot password function: complete
 
-## Completion Status
-- **User registration**: Complete
-- **User login**: Complete
-- **Logout function**: Complete
-- **Forgot password function**: Complete
-
----
-
-## Security Features
+Security Features:
+---------------------
 - **CSRF Protection**: Hidden tokens in form submissions to prevent CSRF attacks.
 - **Password Hashing**: Uses `password_hash()` for secure password storage.
 - **Session Timeout**: Users are logged out after 10 minutes of inactivity.
 - **Suspicious Activity Logging**: Tracks and logs failed login attempts for security monitoring.
 - **HTTPS Enforcement** (recommended for deployment): Use HTTPS to secure all transmitted data.
 
----
-
-## Known Issues
+Known Issues:
+---------------------
 - None as of now.
+

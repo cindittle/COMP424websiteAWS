@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            width: 70%; /* Adjusted for more space */
+            flex-wrap: wrap; /* Allows wrapping of form content */
+        }
+        .form-box {
+            width: 100%;
+            max-width: 700px; /* Adjust max-width for the form box */
+        }
+        h2 {
+            color: black;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .form-column {
+            width: 48%; /* 50% width minus margin for space between columns */
+        }
+        .form-column.center {
+            text-align: center; /* Center the elements inside this column */
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: black;
+            font-size: 16px;
+        }
+        input[type="text"], input[type="password"], input[type="date"], input[type="email"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: purple;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        input[type="submit"]:hover {
+            background-color: blueviolet;
+        }
+        .g-recaptcha {
+            margin-top: 20px; /* Add space above CAPTCHA */
+            display: block; /* Ensure CAPTCHA takes up full width */
+            justify-content: center;
+            align-items: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .password-strength {
+            text-align: center; /* Center the password strength */
+        }
+    </style>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+    <?php
+    session_start();
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));  // Generate a unique CSRF token
+    }
+    ?>
+    <div class="form-container">
+        <div class="form-box">
+            <h2>Register</h2>
+            
+            <form method="post" action="reg.php">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
+                <!-- Left side: Name and Password -->
+                <div class="form-row">
+                    <div class="form-column">
+                        <label>First Name:
+                            <input type="text" name="first_name" required placeholder="First Name">
+                        </label>
+                    </div>
+                    <div class="form-column">
+                        <label>Last Name:
+                            <input type="text" name="last_name" required placeholder="Last Name">
+                        </label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-column center">
+                        <label>Password:
+                            <input type="password" name="password" oninput="checkPasswordStrength(this.value)" required>
+                        </label>
+                        <div class="password-strength">
+                            <p>Password Strength: <span id="password-strength">Weak</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right side: Security Questions -->
+                <div class="form-row">
+                    <div class="form-column">
+                        <label for="question1">Security Question 1:</label>
+                        <select name="question1" required>
+                            <option value="pet_name">What is your first pet's name?</option>
+                            <option value="school_name">What was the name of your first school?</option>
+                            <option value="birth_city">In what city were you born?</option>
+                        </select>
+                        <input type="text" name="answer1" placeholder="Answer" required>
+                    </div>
+                    <div class="form-column">
+                        <label for="question2">Security Question 2:</label>
+                        <select name="question2" required>
+                            <option value="mother_name">What is your mother's maiden name?</option>
+                            <option value="first_car">What was the make of your first car?</option>
+                            <option value="favorite_food">What is your favorite food?</option>
+                        </select>
+                        <input type="text" name="answer2" placeholder="Answer" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-column center">
+                        <label for="question3">Security Question 3:</label>
+                        <select name="question3" required>
+                            <option value="best_friend">What is the name of your best friend?</option>
+                            <option value="favorite_teacher">Who was your favorite teacher?</option>
+                            <option value="childhood_street">What street did you grow up on?</option>
+                        </select>
+                        <input type="text" name="answer3" placeholder="Answer" required>
+                    </div>
+                </div>
+
+                <!-- CAPTCHA Section DONT DELETE THE KEY-->
+                
+
+                <div class="g-recaptcha" data-sitekey="6Ledo5AqAAAAACKsMDbmwu8cDk68RJBXzMwLuDYK"></div>
+                
+                <input type="submit" value="Register">
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        function checkPasswordStrength(password) {
+            let strength = "Weak";
+            const hasUpperCase = [...password].some(char => char >= 'A' && char <= 'Z');
+            const hasNumber = [...password].some(char => char >= '0' && char <= '9');
+    
+            if (password.length >= 8 && hasUpperCase && hasNumber) {
+                strength = "Strong";
+            } else if (password.length >= 6) {
+                strength = "Medium";
+            }
+    
+            document.getElementById("password-strength").innerText = strength;
+        }
+    </script>
+</body>
+</html>

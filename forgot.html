@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Username or Password</title>
+    <link rel="stylesheet" href="forgot.css">
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Forgot Username or Password</h2>
+
+        <form action="recover_account.php" method="post">
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email address" />
+
+            <label for="security-question">Select a Security Question:</label>
+            <select name="security_question" id="security-question" required>
+                <option value="pet_name">What is your first pet's name?</option>
+                <option value="school_name">What was the name of your first school?</option>
+                <option value="birth_city">In what city were you born?</option>
+                <option value="mother_name">What is your mother's maiden name?</option>
+                <option value="first_car">What was the make of your first car?</option>
+                <option value="favorite_food">What is your favorite food?</option>
+                <option value="best_friend">What is the name of your best friend?</option>
+                <option value="favorite_teacher">Who was your favorite teacher?</option>
+                <option value="childhood_street">What street did you grow up on?</option>
+            </select>
+
+            <label for="security-answer">Your Answer:</label>
+            <input type="text" id="security-answer" name="security_answer" required placeholder="Enter your answer" />
+
+            <label for="username">New Username (if required):</label>
+            <input type="text" id="username" name="username" placeholder="Enter new username" />
+
+            <label for="password">New Password (if required):</label>
+            <input type="password" id="password" name="password" placeholder="Enter new password" />
+
+            <input type="submit" value="Recover Account">
+        </form>
+    </div>
+
+</body>
+</html>

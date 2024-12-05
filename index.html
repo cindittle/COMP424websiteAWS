@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Register or Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,9 +17,9 @@
         }
         .form-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: flex-start;
-            width: 45%; 
+            width: 45%;
         }
         .form-box {
             max-width: 300px;
@@ -34,7 +36,7 @@
             color: black;
             font-size: 16px;
         }
-        input[type="text"], input[type="password"], input[type="date"], input[type="email"] {
+        input[type="text"], input[type="password"] {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -54,67 +56,22 @@
         input[type="submit"]:hover {
             background-color: blueviolet;
         }
+        .signup-link, .forgot-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: purple;
+        }
+        .signup-link:hover, .forgot-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <?php
     session_start();
-    if (empty($_SESSION['csrf_token'])) {
-        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));  // Generate a unique CSRF token
-    }
     ?>
     <div class="form-container">
-        <div class="form-box">
-            <h2>Register</h2>
-            <form method="post" action="reg.php">
-                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                <label>First Name:
-                    <input type="text" name="first_name" required placeholder="First Name">
-                </label>
-                <label>Last Name: 
-                    <input type="text" name="last_name" required placeholder="Last Name">
-                </label>
-                <label>Birth Date:
-                    <input type="date" name="birth_date" required>
-                </label>
-                <label>Email:
-                    <input type="email" name="email" required placeholder="Email">
-                </label>
-                <label>Password:
-                    <input type="password" name="password" oninput="checkPasswordStrength(this.value)" required>
-                </label>
-                <p>Password Strength: <span id="password-strength">Weak</span></p>
-    
-                <label for="question1">Security Question 1:</label>
-                <select name="question1" required>
-                    <option value="pet_name">What is your first pet's name?</option>
-                    <option value="school_name">What was the name of your first school?</option>
-                    <option value="birth_city">In what city were you born?</option>
-                </select>
-                <input type="text" name="answer1" placeholder="Answer" required>
-    
-                <label for="question2">Security Question 2:</label>
-                <select name="question2" required>
-                    <option value="mother_name">What is your mother's maiden name?</option>
-                    <option value="first_car">What was the make of your first car?</option>
-                    <option value="favorite_food">What is your favorite food?</option>
-                </select>
-                <input type="text" name="answer2" placeholder="Answer" required>
-    
-                <label for="question3">Security Question 3:</label>
-                <select name="question3" required>
-                    <option value="best_friend">What is the name of your best friend?</option>
-                    <option value="favorite_teacher">Who was your favorite teacher?</option>
-                    <option value="childhood_street">What street did you grow up on?</option>
-                </select>
-                <input type="text" name="answer3" placeholder="Answer" required>
-    
-                <input type="submit" value="Register">
-            </form>
-        </div>
-    </div>
-    
-        
         <div class="form-box">
             <h2>Login</h2>
             <form method="post" action="login.php">
@@ -127,24 +84,9 @@
                 </label>
                 <input type="submit" value="Login">
             </form>
+            <a href="register.html" class="signup-link">New User? Sign Up</a>
+            <a href="forgot.html" class="forgot-link">Forgot Username or Password?</a>
         </div>
     </div>
-
-    <script>
-    function checkPasswordStrength(password) {
-        let strength = "Weak";
-        const hasUpperCase = [...password].some(char => char >= 'A' && char <= 'Z');
-        const hasNumber = [...password].some(char => char >= '0' && char <= '9');
-
-        if (password.length >= 8 && hasUpperCase && hasNumber) {
-            strength = "Strong";
-        } else if (password.length >= 6) {
-            strength = "Medium";
-        }
-
-        document.getElementById("password-strength").innerText = strength;
-    }
-    </script>
 </body>
 </html>
-
