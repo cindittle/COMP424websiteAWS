@@ -1,73 +1,98 @@
-# User Authentication and Session Management Web Application
+# COMP424 Website Project
 
-## Project Description
-This project is a full-stack web application designed to allow users to register, log in, and manage their sessions securely. Key functionalities include user registration, login, session management, logout, and a password recovery system. The application uses PHP, MySQL (or AWS for the database), HTML, JavaScript, and CSS for both front-end and back-end development.
+## Project Overview
+This project is a secure user management web application hosted on AWS. It includes functionalities for user registration, email verification, login tracking, and password recovery. The application is built using PHP, HTML, CSS, and JavaScript, with a MySQL database on AWS RDS.
 
----
+## Features
+- **User Registration**:
+  - Secure user registration with name, email, username, password, and security questions.
+  - Sends a verification email upon successful registration.
+- **Email Verification**:
+  - Activates accounts via unique email verification links.
+  - Option to resend the verification email.
+- **Login System**:
+  - Tracks login attempts, login count, and last login time.
+  - Redirects users to a personalized welcome page after successful login.
+- **Password Recovery**:
+  - Allows users to recover their accounts using security questions.
+- **Security Features**:
+  - CSRF protection for form submissions.
+  - Passwords are securely hashed before storage.
+  - Security questions for account recovery.
 
-## File Descriptions
+## File Structure
 
-1. **index.html**
-   - This is the main HTML file containing both the user registration and login forms.
-   - Users can either create a new account or log in to an existing one.
-   - Features include:
-     - A password strength meter for real-time feedback on password strength during registration.
-     - Hidden CSRF token fields in both the registration and login forms for added security.
+### **Frontend**
+- `index.html`:
+  - Login page for user authentication.
+- `register.html`:
+  - User registration form.
+- `resendEmail.html`:
+  - Page to resend email verification links.
+- `forgot.html`:
+  - Password recovery form.
+- `welcome.html`:
+  - Personalized welcome page for logged-in users.
 
-2. **reg.php**
-   - PHP script responsible for handling new user registrations.
-   - Checks if the username is unique, hashes the user’s password, and stores user information (first name, last name, birth date, email, etc.) in the MySQL database.
-   - Redirects to `index.php` upon successful registration, where the user is automatically logged in for the first time.
-   - Includes CSRF token validation to protect against cross-site request forgery.
+### **Backend**
+- `reg.php`:
+  - Handles user registration and sends verification emails.
+- `login.php`:
+  - Authenticates user credentials and tracks login details.
+- `verifyEmail.php`:
+  - Activates user accounts via email verification.
+- `resendEmail.php`:
+  - Sends a new email verification link.
+- `forgotPassword.php`:
+  - Processes account recovery requests.
+- `confirmRegistration.php`:
+  - Confirms that a verification email has been sent.
 
-3. **login.php**
-   - PHP script that handles user login by verifying entered credentials against the stored database information.
-   - On successful login, the user is redirected to `index.php`.
-   - Tracks failed login attempts and logs suspicious activity if there are too many failed attempts within a short period, alerting administrators of potential brute-force attacks.
-   - CSRF token validation is also included.
+### **Utility Files**
+- `config.php`:
+  - Contains database connection details.
+- `create_users_table.sql`:
+  - SQL script to set up the `users` table in the database.
 
-4. **index.php**
-   - The main application page, where logged-in users can view their login information.
-   - Displays:
-     - A greeting with the user’s first and last name.
-     - Total login count for that user.
-     - The last login date.
-   - Contains a link to download a confidential file (`company_confidential_file.txt`), which is only accessible to logged-in users.
-   - Includes session timeout and auto-logout functionality after 10 minutes of inactivity.
+### **CSS & JavaScript**
+- `forgot.css`, `welcome.css`:
+  - Styling for `forgot.html` and `welcome.html`.
+- `welcome.js`:
+  - Client-side logic for the welcome page.
 
-5. **logout.php**
-   - PHP script that securely handles user logout.
-   - Destroys the current session and redirects the user back to the login/registration page (`index.html`).
-   - Ensures that user data is cleared from the session.
+### **Assets**
+- `Confidential.txt`:
+  - A downloadable file accessible only to logged-in users.
 
-6. **forgotPassword.php**
-   - Handles the password recovery process, where users can reset their password if they forget it.
-   - Allows users to answer security questions to validate their identity.
-   - Generates a reset token, valid for a short period, and sends a password reset link to the user's registered email.
-   - Enables users to set a new password upon token verification.
+## Database Schema
+The database is defined in `create_users_table.sql` and includes:
+- `id`: Primary key.
+- `first_name`, `last_name`: User's name.
+- `email`: Unique email address for the user.
+- `username`: Unique username.
+- `password`: Hashed password.
+- `question1`, `question2`, `question3`: Security questions.
+- `answer1`, `answer2`, `answer3`: Hashed answers.
+- `activation_token`: Token for email verification.
+- `is_active`: Indicates if the account is verified.
+- `created_at`: Timestamp of account creation.
 
-7. **company_confidential_file.txt**
-   - A confidential file that logged-in users can download from `index.php`.
-   - This file is only accessible to authenticated users as per project security requirements.
+## How to Run
+1. **Set Up the Database**:
+   - Import `create_users_table.sql` into your MySQL database.
+   - Ensure the `config.php` file has the correct database credentials.
 
----
+2. **Deploy on AWS**:
+   - Use AWS EC2 for hosting PHP files and AWS RDS for the MySQL database.
+   - Ensure the server has `httpd` or equivalent web server software installed.
 
-## Completion Status
-- **User registration**: Complete
-- **User login**: Complete
-- **Logout function**: Complete
-- **Forgot password function**: Complete
+3. **Email Configuration**:
+   - Update `reg.php` and related files with your email credentials (SMTP server, sender email).
 
----
+4. **Access the Application**:
+   - Navigate to `index.html` to start using the application.
 
-## Security Features
-- **CSRF Protection**: Hidden tokens in form submissions to prevent CSRF attacks.
-- **Password Hashing**: Uses `password_hash()` for secure password storage.
-- **Session Timeout**: Users are logged out after 10 minutes of inactivity.
-- **Suspicious Activity Logging**: Tracks and logs failed login attempts for security monitoring.
-- **HTTPS Enforcement** (recommended for deployment): Use HTTPS to secure all transmitted data.
-
----
-
-## Known Issues
-- None as of now.
+## Future Enhancements
+- Implement Two-Factor Authentication (2FA).
+- Add an admin dashboard for user management.
+- Enhance security with rate-limiting and IP-based blocking.
