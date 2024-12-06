@@ -47,13 +47,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $stmt->close();
 
-        // Insert user data including security questions into the database
-        $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, birth_date, email, username, password, count, last_login, question1, answer1, question2, answer2, question3, answer3) VALUES (?, ?, ?, ?, ?, ?, 1, NOW(), ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssssssssssss", $first_name, $last_name, $birth_date, $email, $username, $password, $question1, $answer1, $question2, $answer2, $question3, $answer3);
+        // Generate a unique verification token
+        $verification_token = bin2hex(random_bytes(16));
+
+        // Insert user data (with verification status as pending) into the database
+        $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, birth_date, email, username, password, count, last_login, question1, answer1, question2, answer2, question3, answer3, verification_token, is_verified) VALUES (?, ?, ?, ?, ?, ?, 1, NOW(), ?, ?, ?, ?, ?, ?, ?, 0)");
+        $stmt->bind_param("sssssssssssssss", $first_name, $last_name, $birth_date, $email, $username, $password, $question1, $answer1, $question2, $answer2, $question3, $answer3, $verification_token);
 
         if ($stmt->execute()) {
-            header("Location: login.php"); // Redirect to login page after successful registration
-            exit();
+            // Send verification email
+            $verification_link = "https://googleultron.com/verifyEmail.php?token=" . $verification_token;
+            $subject = "Email Verification";
+            $message = "Hi $first_name,\n\nPlease click the link below to verify your email address:\n\n$verification_link\n\nThank you!";
+            $headers = "From: no-reply@googleultron.com";
+
+            if (mail($email, $subject, $message, $headers)) {
+                // Redirect to the email verification confirmation page
+                header("Location: confirmRegistration.php");
+                exit();
+            } else {
+                echo "Registration successful, but we couldn't send the verification email.";
+            }
         } else {
             echo "Error: " . $stmt->error;
         }
@@ -63,12 +77,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $conn->close();
 ?>
 
-
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Registration Error</title>
-        <style>
+<head>
+    <title>Registration Error</title>
+    <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f9f9f9;
@@ -90,19 +103,20 @@ $conn->close();
             color: blueviolet;
             text-decoration: underline;
         }
-        </style>
-    </head>
-    <body>
-        <div class="error-message">
-            <p>Username already taken!</p>
-            <a href="index.html">Click here to go back to Registration</a>
-        </div>
-    </body>
+    </style>
+</head>
+<body>
+    <div class="error-message">
+        <p>Username already taken!</p>
+        <a href="index.html">Click here to go back to Registration</a>
+    </div>
+</body>
 </html>
- 
- <?php
- // will auto redirect to index.html after 10 seconds
- header("refresh:10;url=index.html");
- exit();
- ?>
+
+<?php
+// Auto redirect to index.html after 10 seconds
+header("refresh:10;url=index.html");
+exit();
+?>
+
 

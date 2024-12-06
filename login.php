@@ -40,7 +40,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $update_stmt->bind_param("iss", $new_count, $now, $username);
             $update_stmt->execute();
 
-            header("Location: welcome.php"); // Redirect to welcome page
+            // Redirect to welcome.html
+            header("Location: welcome.html");
             exit();
         } else {
             echo "Invalid username or password.";

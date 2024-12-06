@@ -77,6 +77,10 @@
         .password-strength {
             text-align: center; /* Center the password strength */
         }
+        .checkbox-container {
+            margin-top: 20px;
+            text-align: left;
+        }
     </style>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
@@ -94,7 +98,7 @@
             <form method="post" action="reg.php">
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
-                <!-- Left side: Name and Password -->
+                <!-- Name Fields -->
                 <div class="form-row">
                     <div class="form-column">
                         <label>First Name:
@@ -107,6 +111,8 @@
                         </label>
                     </div>
                 </div>
+
+                <!-- Password Field -->
                 <div class="form-row">
                     <div class="form-column center">
                         <label>Password:
@@ -118,7 +124,7 @@
                     </div>
                 </div>
 
-                <!-- Right side: Security Questions -->
+                <!-- Security Questions -->
                 <div class="form-row">
                     <div class="form-column">
                         <label for="question1">Security Question 1:</label>
@@ -139,21 +145,23 @@
                         <input type="text" name="answer2" placeholder="Answer" required>
                     </div>
                 </div>
+
+                <!-- Email Fields -->
                 <div class="form-row">
-                    <div class="form-column center">
-                        <label for="question3">Security Question 3:</label>
-                        <select name="question3" required>
-                            <option value="best_friend">What is the name of your best friend?</option>
-                            <option value="favorite_teacher">Who was your favorite teacher?</option>
-                            <option value="childhood_street">What street did you grow up on?</option>
-                        </select>
-                        <input type="text" name="answer3" placeholder="Answer" required>
+                    <div class="form-column">
+                        <label>Email Address:
+                            <input type="email" name="email" required placeholder="Enter your email">
+                        </label>
+                    </div>
+                    <div class="form-column">
+                        <div class="checkbox-container">
+                            <input type="checkbox" name="email_updates" id="email_updates">
+                            <label for="email_updates">Sign up for email updates</label>
+                        </div>
                     </div>
                 </div>
 
-                <!-- CAPTCHA Section DONT DELETE THE KEY-->
-                
-
+                <!-- CAPTCHA Section -->
                 <div class="g-recaptcha" data-sitekey="6Ledo5AqAAAAACKsMDbmwu8cDk68RJBXzMwLuDYK"></div>
                 
                 <input type="submit" value="Register">
