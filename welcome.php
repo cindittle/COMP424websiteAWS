@@ -24,20 +24,27 @@ if ($conn->connect_error) {
 
 // Retrieve user data
 $first_name = $_SESSION['first_name'];
-$stmt = $conn->prepare("SELECT first_name, last_name, count, last_login FROM users WHERE first_name = ?");
+$stmt = $conn->prepare("SELECT first_name, last_name, count, last_login, is_verified FROM users WHERE first_name = ?");
 $stmt->bind_param("s", $first_name);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result && $result->num_rows > 0) {
     $user = $result->fetch_assoc();
+
+    // Update last login and increment login count
+    $updateStmt = $conn->prepare("UPDATE users SET last_login = NOW(), count = count + 1 WHERE first_name = ?");
+    $updateStmt->bind_param("s", $first_name);
+    $updateStmt->execute();
+
     echo json_encode([
         "status" => "success",
         "data" => [
             "first_name" => $user['first_name'],
             "last_name" => $user['last_name'],
-            "login_count" => $user['count'],
-            "last_login" => $user['last_login'] ?: "N/A"
+            "login_count" => $user['count'] + 1, // Increment the count for display
+            "last_login" => $user['last_login'] ?: "N/A",
+            "is_verified" => $user['is_verified']
         ]
     ]);
 } else {
