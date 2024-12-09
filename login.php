@@ -9,25 +9,30 @@ $dbname = "Project";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die("Database connection failed: " . htmlspecialchars($conn->connect_error));
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    // Sanitize user input
+    $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
+    $password = $_POST['password']; // Password doesn't need escaping as it's hashed and verified
 
     // Retrieve user data from the database
     $stmt = $conn->prepare("SELECT id, username, password, first_name, last_name, count, last_login FROM users WHERE username = ?");
+    if (!$stmt) {
+        die("Database error: " . htmlspecialchars($conn->error));
+    }
+
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if ($result->num_rows > 0) {
+    if ($result && $result->num_rows > 0) {
         $user = $result->fetch_assoc();
 
         // Verify the password
         if (password_verify($password, $user['password'])) {
-            // Successful login
+            // Successful login: Set session variables
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['first_name'] = $user['first_name'];
@@ -39,20 +44,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $new_count = $user['count'] + 1;
             $now = date("Y-m-d H:i:s");
             $update_stmt = $conn->prepare("UPDATE users SET count = ?, last_login = ? WHERE id = ?");
-            $update_stmt->bind_param("isi", $new_count, $now, $user['id']);
-            $update_stmt->execute();
+            if ($update_stmt) {
+                $update_stmt->bind_param("isi", $new_count, $now, $user['id']);
+                $update_stmt->execute();
+                $update_stmt->close();
+            } else {
+                error_log("Failed to update login count: " . $conn->error);
+            }
 
             // Redirect to welcome page
             header("Location: welcome.php");
             exit();
         } else {
             // Invalid password
-            echo "Invalid username or password.";
+            echo "<p style='color: red;'>Invalid username or password.</p>";
         }
     } else {
         // Username not found
-        echo "User not found.";
+        echo "<p style='color: red;'>User not found.</p>";
     }
+
     $stmt->close();
 }
 $conn->close();
@@ -96,6 +107,10 @@ $conn->close();
         input[type="submit"]:hover {
             background-color: blueviolet;
         }
+        p {
+            font-size: 16px;
+            margin-top: 10px;
+        }
         hr {
             margin: 40px 0;
         }
@@ -114,4 +129,3 @@ $conn->close();
     </form>
 </body>
 </html>
-
