@@ -99,7 +99,7 @@ $conn->close();
 </head>
 <body>
     <h2>Login</h2>
-    <form method="post" action="login.php">
+    <form method="post" action="welcome.php">
         <label for="username">Username:</label>
         <input type="text" name="username" id="username" required>
         <br>
