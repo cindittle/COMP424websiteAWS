@@ -1,36 +1,32 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $recaptchaSecret = '6LeKo5AqAAAAAMVnEFt_V0nv9EREr5X-cTZqKza2'; // Your secret key from Google reCAPTCHA
-
-    // The response from reCAPTCHA
+    $recaptchaSecret = '6LedM5YqAAAAAJ6TGIHyBADzSDIBblv2lvpQbQLc'; // Replace with your reCAPTCHA secret key
     $recaptchaResponse = $_POST['g-recaptcha-response'];
 
-    // Google reCAPTCHA API URL
+    // Validate reCAPTCHA response with Google
     $url = 'https://www.google.com/recaptcha/api/siteverify';
-
-    // Data to send to the API
     $data = [
         'secret' => $recaptchaSecret,
         'response' => $recaptchaResponse
     ];
 
-    // Use cURL to verify the response
     $options = [
         'http' => [
+            'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
             'method'  => 'POST',
             'content' => http_build_query($data)
         ]
     ];
     $context = stream_context_create($options);
     $verifyResponse = file_get_contents($url, false, $context);
-    $responseKeys = json_decode($verifyResponse);
+    $responseData = json_decode($verifyResponse);
 
-    // Check if the CAPTCHA was successful
-    if ($responseKeys->success) {
-        echo "CAPTCHA passed, proceed with registration.";
-        // Proceed with the registration logic
+    // Check if CAPTCHA was successful
+    if ($responseData->success) {
+        echo "CAPTCHA verification passed.";
+        // Proceed with registration logic here
     } else {
-        echo "CAPTCHA failed, please try again.";
+        die("CAPTCHA verification failed. Please try again.");
     }
 }
 ?>
