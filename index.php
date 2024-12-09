@@ -20,10 +20,10 @@ if (!isset($_SESSION['userid'])) {
 session_regenerate_id(true);
 
 // AWS Database connection
-$servername = "your-aws-rds-endpoint";  // Replace with AWS RDS endpoint
-$username = "your-aws-username";        // Replace with AWS username
-$password = "your-aws-password";        // Replace with AWS password
-$dbname = "your-database-name";         // Replace with AWS database name
+$servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";
+$db_username = "admin";
+$db_password = "RootUserPassword123!#";
+$dbname = "Project";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {

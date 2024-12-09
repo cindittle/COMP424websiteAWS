@@ -3,7 +3,7 @@ session_start();
 include 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
+    // Database details
     $servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";
     $username = "admin";
     $password = "RootUserPassword123!#";
@@ -40,17 +40,105 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        .form-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+            border-color: #6c63ff;
+            outline: none;
+            box-shadow: 0 0 4px rgba(108, 99, 255, 0.3);
+        }
+        button {
+            background-color: #6c63ff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #574bff;
+        }
+        .form-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+        .form-footer a {
+            color: #6c63ff;
+            text-decoration: none;
+        }
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <form method="POST" action="register.php">
-        <label>First Name: <input type="text" name="first_name" required></label><br>
-        <label>Last Name: <input type="text" name="last_name" required></label><br>
-        <label>Email: <input type="email" name="email" required></label><br>
-        <label>Password: <input type="password" name="password" required></label><br>
-        <button type="submit">Register</button>
-    </form>
+    <div class="form-container">
+        <h2>Register</h2>
+        <form method="POST" action="register.php">
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="first_name" required>
+            
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit">Register</button>
+        </form>
+        <div class="form-footer">
+            Already have an account? <a href="login.php">Log in</a>
+        </div>
+    </div>
 </body>
 </html>
