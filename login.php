@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $update_stmt->execute();
 
             // Redirect to welcome.html
-            header("Location: welcome.html");
+            header("Location: welcome.php");
             exit();
         } else {
             echo "Invalid username or password.";
