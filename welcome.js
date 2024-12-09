@@ -7,9 +7,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 const user = data.data;
 
                 // Update UI with user information
-                document.getElementById('user-name').textContent = user.first_name;
-                document.getElementById('login-info').innerHTML = `You have logged in <strong>${user.login_count}</strong> times.`;
-                document.getElementById('last-login').innerHTML = `Last login date: <strong>${user.last_login}</strong>`;
+                document.getElementById('first_name').textContent = user.first_name;
+                document.getElementById('login_info').innerHTML = `You have logged in <strong>${user.login_count}</strong> times.`;
+                document.getElementById('last_login').innerHTML = `Last login date: <strong>${user.last_login}</strong>`;
 
                 // Handle email verification button visibility
                 const verifyEmailButton = document.querySelector('.email-button');

@@ -54,7 +54,7 @@ if ($result && $result->num_rows > 0) {
         "data" => [
             "first_name" => $user['first_name'],
             "last_name" => $user['last_name'],
-            "login_count" => $user['count'],
+            "login_count" => $user['count'] + 1, // Increment the count for display
             "last_login" => $user['last_login'] ?: "N/A",
             "is_verified" => $user['is_verified']
         ]

@@ -18,9 +18,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $last_name = filter_var(trim($_POST['last_name']), FILTER_SANITIZE_STRING);
         $email = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
         $password = trim($_POST['password']);
+        $question1 = filter_var(trim($_POST['question1']), FILTER_SANITIZE_STRING);
+        $answer1 = filter_var(trim($_POST['answer1']), FILTER_SANITIZE_STRING);
+        $question2 = filter_var(trim($_POST['question2']), FILTER_SANITIZE_STRING);
+        $answer2 = filter_var(trim($_POST['answer2']), FILTER_SANITIZE_STRING);
 
         // Validate required fields
-        if (!$first_name || !$last_name || !$email || !$password) {
+        if (!$first_name || !$last_name || !$email || !$password || !$question1 || !$answer1 || !$question2 || !$answer2) {
             echo "All fields are required.";
             exit();
         }
@@ -40,8 +44,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $activation_token = bin2hex(random_bytes(16));
 
         // Insert the user into the database
-        $stmt = $pdo->prepare("INSERT INTO users (first_name, last_name, email, password, activation_token) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$first_name, $last_name, $email, $hashed_password, $activation_token]);
+        $stmt = $pdo->prepare(
+            "INSERT INTO users (first_name, last_name, email, password, question1, answer1, question2, answer2, activation_token) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        );
+        $stmt->execute([
+            $first_name, $last_name, $email, $hashed_password,
+            $question1, $answer1, $question2, $answer2, $activation_token
+        ]);
 
         // Send the activation email
         $domain = $_SERVER['HTTP_HOST'];
