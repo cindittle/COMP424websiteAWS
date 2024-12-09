@@ -67,11 +67,11 @@
             background-color: darkviolet;
         }
         .email-button {
-            background-color: orange;
+            background-color: rgb(57, 126, 255);
             margin-left: 10px;
         }
         .email-button:hover {
-            background-color: darkorange;
+            background-color: rgb(0, 89, 255);
         }
     </style>
 </head>
@@ -82,19 +82,17 @@
 
     <!-- Centered Content Container -->
     <div class="content-container">
-        <h1>Welcome, <span id="user-name"><?php echo htmlspecialchars($full_name); ?></span>!</h1>
+        <h1>Welcome, <span id="user-name"></span>!</h1>
 
         <div class="user-info">
-            <p id="login-info">You have logged in <strong><?php echo htmlspecialchars($login_count); ?></strong> times.</p>
-            <p id="last-login">Last login date: <strong><?php echo htmlspecialchars($last_login); ?></strong></p>
+            <p id="login-info">You have logged in <strong></strong> times.</p>
+            <p id="last-login">Last login date: <strong></strong></p>
         </div>
 
         <!-- Centered Download Link -->
         <div class="download-container">
             <a href="confidential.txt" class="button" download>Download Confidential File</a>
-            <?php if (!$is_verified): ?>
-                <a href="resendEmail.php" class="email-button">Verify Email</a>
-            <?php endif; ?>
+            <a href="resendEmail.php" class="email-button">Verify Email</a>
         </div>
     </div>
 

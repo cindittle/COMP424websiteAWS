@@ -1,48 +1,49 @@
 <?php
 session_start();
 
-// Redirect to login page if user is not logged in
+header('Content-Type: application/json');
+
+// Check if the user is logged in
 if (!isset($_SESSION['first_name'])) {
-    header("Location: login.php");
+    echo json_encode(["status" => "error", "message" => "User not logged in"]);
     exit();
 }
 
 // AWS Database connection setup
 $servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";
-$db_username = "admin";
-$db_password = "RootUserPassword123!#";
+$username = "admin";
+$password = "RootUserPassword123!#";
 $dbname = "Project";
 
-// Establish database connection
-$conn = new mysqli($servername, $db_username, $db_password, $dbname);
+// Connect to the database
+$conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
-    die("Database connection failed: " . htmlspecialchars($conn->connect_error));
+    echo json_encode(["status" => "error", "message" => "Database connection failed"]);
+    exit();
 }
 
-// Retrieve user data from the database
+// Retrieve user data
 $first_name = $_SESSION['first_name'];
-$stmt = $conn->prepare("SELECT first_name, last_name, count, last_login, is_verified FROM users WHERE first_name = ?");
-if (!$stmt) {
-    die("Database statement preparation failed: " . htmlspecialchars($conn->error));
-}
+$stmt = $conn->prepare("SELECT first_name, last_name, count, last_login FROM users WHERE first_name = ?");
 $stmt->bind_param("s", $first_name);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result && $result->num_rows > 0) {
-    // Fetch user details
     $user = $result->fetch_assoc();
-    $full_name = $user['first_name'] . " " . $user['last_name'];
-    $login_count = $user['count'];
-    $last_login = $user['last_login'] ? $user['last_login'] : "N/A"; // Show "N/A" if no login date is recorded
-    $is_verified = $user['is_verified'];
+    echo json_encode([
+        "status" => "success",
+        "data" => [
+            "first_name" => $user['first_name'],
+            "last_name" => $user['last_name'],
+            "login_count" => $user['count'],
+            "last_login" => $user['last_login'] ?: "N/A"
+        ]
+    ]);
 } else {
-    // Redirect if no valid user data is found
-    header("Location: login.php");
-    exit();
+    echo json_encode(["status" => "error", "message" => "User not found"]);
 }
 
-// Close the database connection
 $stmt->close();
 $conn->close();
 ?>

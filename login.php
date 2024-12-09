@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['count'] = $user['count'] + 1;
             $_SESSION['last_login'] = $user['last_login'];
 
-            // Update login count and last login time
+            // Update login count and last login date
             $new_count = $user['count'] + 1;
             $now = date("Y-m-d H:i:s");
             $update_stmt = $conn->prepare("UPDATE users SET count = ?, last_login = ? WHERE id = ?");
@@ -51,10 +51,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $update_stmt->execute();
                 $update_stmt->close();
             } else {
-                error_log("Failed to update login count: " . $conn->error);
+                error_log("Failed to update login count or last login: " . $conn->error);
             }
 
-            // Redirect to welcome page
+            // Redirect to welcome.php
             header("Location: welcome.php");
             exit();
         } else {
@@ -109,10 +109,13 @@ $conn->close();
         input[type="submit"]:hover {
             background-color: blueviolet;
         }
+        hr {
+            margin: 40px 0;
+        }
         .error {
             color: red;
-            font-size: 16px;
-            margin-top: 10px;
+            font-weight: bold;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -127,7 +130,7 @@ $conn->close();
         <br>
         <input type="submit" value="Login">
     </form>
-    <?php if (!empty($error_message)): ?>
+    <?php if (!empty($error_message)) : ?>
         <p class="error"><?php echo htmlspecialchars($error_message); ?></p>
     <?php endif; ?>
 </body>

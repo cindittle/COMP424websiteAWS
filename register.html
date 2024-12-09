@@ -85,12 +85,7 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
-    <?php
-    session_start();
-    if (empty($_SESSION['csrf_token'])) {
-        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));  // Generate a unique CSRF token
-    }
-    ?>
+    
     <div class="form-container">
         <div class="form-box">
             <h2>Register</h2>

@@ -1,31 +1,43 @@
 <?php
-include 'config.php';
-
-$servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";
-$username = "admin";
-$password = "RootUserPassword123!#";
-$dbname = "Project";
-
-
-if (isset($_GET['token'])) {
+if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['token'])) {
     $token = $_GET['token'];
 
-    // Check if the token exists in the database
-    $stmt = $pdo->prepare('SELECT id FROM users WHERE activation_token = :token AND is_active = 0');
-    $stmt->execute(['token' => $token]);
-    $user = $stmt->fetch();
+    // Connect to the database
+    $servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";
+    $db_username = "admin";
+    $db_password = "RootUserPassword123!#";
+    $dbname = "Project";
 
-    if ($user) {
-        // Activate the user and remove the token
-        $stmt = $pdo->prepare('UPDATE users SET is_active = 1, activation_token = NULL WHERE id = :id');
-        $stmt->execute(['id' => $user['id']]);
-
-        echo 'Your email has been successfully verified! You can now log in.';
-        header('refresh:5;url=login.php'); // Redirect to login after 5 seconds
-    } else {
-        echo 'Invalid or expired token.';
+    $conn = new mysqli($servername, $db_username, $db_password, $dbname);
+    if ($conn->connect_error) {
+        die("Database connection failed: " . $conn->connect_error);
     }
+
+    // Validate the token
+    $stmt = $conn->prepare("SELECT id FROM users WHERE verification_token = ? AND is_verified = 0");
+    $stmt->bind_param("s", $token);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+
+        // Mark the user as verified
+        $update_stmt = $conn->prepare("UPDATE users SET is_verified = 1, verification_token = NULL WHERE id = ?");
+        $update_stmt->bind_param("i", $user['id']);
+        if ($update_stmt->execute()) {
+            echo "Email verified successfully!";
+        } else {
+            echo "Failed to verify email. Please try again.";
+        }
+        $update_stmt->close();
+    } else {
+        echo "Invalid or expired token.";
+    }
+
+    $stmt->close();
+    $conn->close();
 } else {
-    echo 'No verification token provided.';
+    echo "Invalid request.";
 }
 ?>

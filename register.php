@@ -1,41 +1,67 @@
 <?php
 session_start();
-include 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Database details
+    // Database connection details
     $servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";
-    $username = "admin";
-    $password = "RootUserPassword123!#";
+    $db_username = "admin";
+    $db_password = "RootUserPassword123!#";
     $dbname = "Project";
 
-    // Retrieve form data
-    $first_name = trim($_POST['first_name']);
-    $last_name = trim($_POST['last_name']);
-    $email = trim($_POST['email']);
-    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
-    
-    // Check if the first name is already taken
-    $check_stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE first_name = ?");
-    $check_stmt->execute([$first_name]);
-    if ($check_stmt->fetchColumn() > 0) {
-        echo "The first name is already taken. Please choose another.";
+    try {
+        // Connect to the database
+        $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $db_username, $db_password);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // Retrieve and sanitize form data
+        $first_name = filter_var(trim($_POST['first_name']), FILTER_SANITIZE_STRING);
+        $last_name = filter_var(trim($_POST['last_name']), FILTER_SANITIZE_STRING);
+        $email = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
+        $password = trim($_POST['password']);
+
+        // Validate required fields
+        if (!$first_name || !$last_name || !$email || !$password) {
+            echo "All fields are required.";
+            exit();
+        }
+
+        // Check if email is already registered
+        $check_stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
+        $check_stmt->execute([$email]);
+        if ($check_stmt->fetchColumn() > 0) {
+            echo "The email is already registered. Please use another email.";
+            exit();
+        }
+
+        // Hash the password
+        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+        // Generate a unique activation token
+        $activation_token = bin2hex(random_bytes(16));
+
+        // Insert the user into the database
+        $stmt = $pdo->prepare("INSERT INTO users (first_name, last_name, email, password, activation_token) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$first_name, $last_name, $email, $hashed_password, $activation_token]);
+
+        // Send the activation email
+        $domain = $_SERVER['HTTP_HOST'];
+        $activation_link = "http://$domain/activate.php?token=$activation_token";
+        $subject = "Activate your account";
+        $message = "Click the link to activate your account: $activation_link";
+        $headers = "From: no-reply@$domain\r\n" .
+                   "Reply-To: no-reply@$domain\r\n" .
+                   "X-Mailer: PHP/" . phpversion();
+
+        if (mail($email, $subject, $message, $headers)) {
+            echo "Registration successful. Please check your email to activate your account.";
+        } else {
+            echo "Registration successful, but we couldn't send the activation email.";
+        }
+
+    } catch (PDOException $e) {
+        echo "Database error: " . htmlspecialchars($e->getMessage());
         exit();
     }
-    
-    // Generate a unique activation token
-    $activation_token = bin2hex(random_bytes(16));
-    
-    // Save the user to the database
-    $stmt = $pdo->prepare("INSERT INTO users (first_name, last_name, email, password, activation_token) VALUES (?, ?, ?, ?, ?)");
-    $stmt->execute([$first_name, $last_name, $email, $password, $activation_token]);
-
-    // Send activation email with the token
-    $subject = "Activate your account";
-    $message = "Click the link to activate your account: http://localhost/activate.php?token=$activation_token";
-    mail($email, $subject, $message);
-    
-    echo "Registration successful. Please check your email to activate your account.";
 }
 ?>
 
