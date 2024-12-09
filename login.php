@@ -2,19 +2,22 @@
 session_start();
 
 // AWS Database connection setup
-$servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";  
-$username = "admin";
-$password = "RootUserPassword123!#";
+$servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";
+$db_username = "admin";
+$db_password = "RootUserPassword123!#";
 $dbname = "Project";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+// Establish database connection
+$conn = new mysqli($servername, $db_username, $db_password, $dbname);
 if ($conn->connect_error) {
     die("Database connection failed: " . htmlspecialchars($conn->connect_error));
 }
 
+$error_message = ""; // For displaying errors
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitize user input
-    $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
+    $username = trim(htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8'));
     $password = $_POST['password']; // Password doesn't need escaping as it's hashed and verified
 
     // Retrieve user data from the database
@@ -57,11 +60,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         } else {
             // Invalid password
-            echo "<p style='color: red;'>Invalid username or password.</p>";
+            $error_message = "Invalid username or password.";
         }
     } else {
         // Username not found
-        echo "<p style='color: red;'>User not found.</p>";
+        $error_message = "User not found.";
     }
 
     $stmt->close();
@@ -107,12 +110,10 @@ $conn->close();
         input[type="submit"]:hover {
             background-color: blueviolet;
         }
-        p {
+        .error {
+            color: red;
             font-size: 16px;
             margin-top: 10px;
-        }
-        hr {
-            margin: 40px 0;
         }
     </style>
 </head>
@@ -127,5 +128,8 @@ $conn->close();
         <br>
         <input type="submit" value="Login">
     </form>
+    <?php if (!empty($error_message)): ?>
+        <p class="error"><?php echo htmlspecialchars($error_message); ?></p>
+    <?php endif; ?>
 </body>
 </html>
