@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="welcome.css">
+    <script src="welcome.js" defer></script>
+    <style>
+        .email-button {
+            background-color: orange;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            margin-top: 10px;
+            display: inline-block;
+            border-radius: 5px;
+        }
+        .email-button:hover {
+            background-color: darkorange;
+        }
+        .content-container {
+            max-width: 600px;
+            margin: auto;
+            text-align: center;
+        }
+        .download-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Logout Button -->
+    <a href="logout.php" class="logout-button">Logout</a>
+
+    <!-- Centered Content Container -->
+    <div class="content-container">
+        <h1>Welcome, <span id="user-name"><?php echo htmlspecialchars($full_name); ?></span>!</h1>
+
+        <div class="user-info">
+            <p id="login-info">You have logged in <strong><?php echo htmlspecialchars($login_count); ?></strong> times.</p>
+            <p id="last-login">Last login date: <strong><?php echo htmlspecialchars($last_login); ?></strong></p>
+        </div>
+
+        <!-- Centered Download Link -->
+        <div class="download-container">
+            <a href="confidential.txt" class="button" download>Download Confidential File</a>
+            <?php if (!$is_verified): ?>
+                <a href="resendEmail.php" class="email-button">Verify Email</a>
+            <?php endif; ?>
+        </div>
+    </div>
+
+</body>
+</html>
