@@ -3,20 +3,20 @@ session_start();
 
 // AWS Database connection setup
 $servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";
-$username = "admin";
-$password = "RootUserPassword123!#";
+$db_username = "admin";
+$db_password = "RootUserPassword123!#";
 $dbname = "Project";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $db_username, $db_password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-if (isset($_SESSION['username'])) {
-    $username = $_SESSION['username'];
+if (isset($_SESSION['first_name'])) {
+    $first_name = $_SESSION['first_name'];
 
-    $stmt = $conn->prepare("SELECT first_name, last_name, count, last_login FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
+    $stmt = $conn->prepare("SELECT first_name, last_name, count, last_login FROM users WHERE first_name = ?");
+    $stmt->bind_param("s", $first_name);
     $stmt->execute();
     $result = $stmt->get_result();
 

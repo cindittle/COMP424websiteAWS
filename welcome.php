@@ -2,30 +2,30 @@
 session_start();
 
 // Redirect to login page if user is not logged in
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['first_name'])) {
     header("Location: login.php");
     exit();
 }
 
 // AWS Database connection setup
 $servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";
-$username = "admin";
-$password = "RootUserPassword123!#";
+$db_username = "admin";
+$db_password = "RootUserPassword123!#";
 $dbname = "Project";
 
 // Establish database connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $db_username, $db_password, $dbname);
 if ($conn->connect_error) {
     die("Database connection failed: " . htmlspecialchars($conn->connect_error));
 }
 
 // Retrieve user data from the database
-$username = $_SESSION['username'];
-$stmt = $conn->prepare("SELECT first_name, last_name, count, last_login, is_verified FROM users WHERE username = ?");
+$first_name = $_SESSION['first_name'];
+$stmt = $conn->prepare("SELECT first_name, last_name, count, last_login, is_verified FROM users WHERE first_name = ?");
 if (!$stmt) {
     die("Database statement preparation failed: " . htmlspecialchars($conn->error));
 }
-$stmt->bind_param("s", $username);
+$stmt->bind_param("s", $first_name);
 $stmt->execute();
 $result = $stmt->get_result();
 

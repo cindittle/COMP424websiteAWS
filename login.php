@@ -17,16 +17,16 @@ $error_message = ""; // For displaying errors
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitize user input
-    $username = trim(htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8'));
+    $first_name = trim(htmlspecialchars($_POST['first_name'], ENT_QUOTES, 'UTF-8'));
     $password = $_POST['password']; // Password doesn't need escaping as it's hashed and verified
 
-    // Retrieve user data from the database
-    $stmt = $conn->prepare("SELECT id, username, password, first_name, last_name, count, last_login FROM users WHERE username = ?");
+    // Retrieve user data from the database using first_name
+    $stmt = $conn->prepare("SELECT id, first_name, password, last_name, count, last_login FROM users WHERE first_name = ?");
     if (!$stmt) {
         die("Database error: " . htmlspecialchars($conn->error));
     }
 
-    $stmt->bind_param("s", $username);
+    $stmt->bind_param("s", $first_name);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -37,7 +37,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($password, $user['password'])) {
             // Successful login: Set session variables
             $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['username'];
             $_SESSION['first_name'] = $user['first_name'];
             $_SESSION['last_name'] = $user['last_name'];
             $_SESSION['count'] = $user['count'] + 1;
@@ -60,10 +59,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         } else {
             // Invalid password
-            $error_message = "Invalid username or password.";
+            $error_message = "Invalid first name or password.";
         }
     } else {
-        // Username not found
+        // First name not found
         $error_message = "User not found.";
     }
 
@@ -120,8 +119,8 @@ $conn->close();
 <body>
     <h2>Login</h2>
     <form method="post" action="login.php">
-        <label for="username">Username:</label>
-        <input type="text" name="username" id="username" required>
+        <label for="first_name">First Name:</label>
+        <input type="text" name="first_name" id="first_name" required>
         <br>
         <label for="password">Password:</label>
         <input type="password" name="password" id="password" required>

@@ -3,25 +3,25 @@ session_start();
 
 // AWS Database connection setup
 $servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";  // AWS RDS endpoint
-$username = "admin";                                               // AWS username
-$password = "RootUserPassword123!#";                               // AWS password
-$dbname = "Project";                                               // AWS database name
+$db_username = "admin";                                           // AWS username
+$db_password = "RootUserPassword123!#";                           // AWS password
+$dbname = "Project";                                              // AWS database name
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $db_username, $db_password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
 // Check if the request method is POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Step 1: User has submitted a username and security answer
-    if (isset($_POST['username']) && isset($_POST['security_answer'])) {
-        $username = $_POST['username'];
+    // Step 1: User has submitted a first_name and security answer
+    if (isset($_POST['first_name']) && isset($_POST['security_answer'])) {
+        $first_name = $_POST['first_name'];
         $security_answer = $_POST['security_answer'];
 
         // Retrieve the stored security answer
-        $stmt = $conn->prepare("SELECT userid, security_answer FROM users WHERE username = ?");
-        $stmt->bind_param("s", $username);
+        $stmt = $conn->prepare("SELECT userid, answer1 FROM users WHERE first_name = ?");
+        $stmt->bind_param("s", $first_name);
         $stmt->execute();
         $stmt->store_result();
 
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo "<p>Incorrect security answer. Please try again.</p>";
             }
         } else {
-            echo "<p>No user found with that username.</p>";
+            echo "<p>No user found with that first name.</p>";
         }
 
         $stmt->close();
@@ -103,14 +103,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <?php
 } else {
-    // Step 5: Display the initial form to enter username and security answer
+    // Step 5: Display the initial form to enter first_name and security answer
     ?>
 
     <!-- Request Reset Form -->
     <div class="form-container">
         <form method="POST" action="forgot_password.php">
-            <label>Username:
-                <input type="text" name="username" required>
+            <label>First Name:
+                <input type="text" name="first_name" required>
             </label>
             <label>Security Answer:
                 <input type="text" name="security_answer" required>
@@ -175,4 +175,3 @@ $conn->close();
         color: #333;
     }
 </style>
-

@@ -1,6 +1,12 @@
 <?php
 include 'config.php';
 
+$servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";
+$username = "admin";
+$password = "RootUserPassword123!#";
+$dbname = "Project";
+
+
 if (isset($_GET['token'])) {
     $token = $_GET['token'];
 

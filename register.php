@@ -1,14 +1,27 @@
 <?php
-// register.php NEWLY MADE IN CASE REG.PHP GIVES ISSUE
 session_start();
 include 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";
+    $username = "admin";
+    $password = "RootUserPassword123!#";
+    $dbname = "Project";
+
     // Retrieve form data
-    $first_name = $_POST['first_name'];
-    $last_name = $_POST['last_name'];
-    $email = $_POST['email'];
+    $first_name = trim($_POST['first_name']);
+    $last_name = trim($_POST['last_name']);
+    $email = trim($_POST['email']);
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+    
+    // Check if the first name is already taken
+    $check_stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE first_name = ?");
+    $check_stmt->execute([$first_name]);
+    if ($check_stmt->fetchColumn() > 0) {
+        echo "The first name is already taken. Please choose another.";
+        exit();
+    }
     
     // Generate a unique activation token
     $activation_token = bin2hex(random_bytes(16));

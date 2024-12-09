@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     // Verify CAPTCHA
-    $recaptchaSecret = "your-secret-key";
+    $recaptchaSecret = "6LfgNJYqAAAAAFlXnLwfsSmlLWPUt6-LEKyQjVAc";
     $recaptchaResponse = $_POST['g-recaptcha-response'];
     $url = 'https://www.google.com/recaptcha/api/siteverify';
     $data = [
@@ -48,24 +48,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $first_name = htmlspecialchars($_POST['first_name'], ENT_QUOTES, 'UTF-8');
     $last_name = htmlspecialchars($_POST['last_name'], ENT_QUOTES, 'UTF-8');
     $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-    $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    // Check if username or email already exists
-    $stmt = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
-    $stmt->bind_param("ss", $username, $email);
+    // Check if first_name or email already exists
+    $stmt = $conn->prepare("SELECT id FROM users WHERE first_name = ? OR email = ?");
+    $stmt->bind_param("ss", $first_name, $email);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        die("Username or email already exists. Please try a different one.");
+        die("First name or email already exists. Please try a different one.");
     }
     $stmt->close();
 
     // Insert user into the database
     $verification_token = bin2hex(random_bytes(16));
-    $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, email, username, password, verification_token, is_verified) VALUES (?, ?, ?, ?, ?, ?, 0)");
-    $stmt->bind_param("ssssss", $first_name, $last_name, $email, $username, $password, $verification_token);
+    $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, email, password, verification_token, is_verified) VALUES (?, ?, ?, ?, ?, 0)");
+    $stmt->bind_param("sssss", $first_name, $last_name, $email, $password, $verification_token);
 
     if ($stmt->execute()) {
         // Send verification email
@@ -120,7 +119,7 @@ $conn->close();
 </head>
 <body>
     <div class="error-message">
-        <p>Username already taken!</p>
+        <p>First name or email already taken!</p>
         <a href="index.html">Click here to go back to Registration</a>
     </div>
 </body>
@@ -131,5 +130,3 @@ $conn->close();
 header("refresh:10;url=index.html");
 exit();
 ?>
-
-
