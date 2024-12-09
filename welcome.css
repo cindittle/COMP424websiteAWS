@@ -94,3 +94,30 @@ h1 {
     font-size: 26px;
     margin-bottom: 20px;
 }
+
+/* Styling for Email Verification Button */
+.email-button {
+    background-color: #007bff; /* Blue color */
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    margin-left: 10px; /* Space between buttons */
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.email-button:hover {
+    background-color: #0056b3;
+}
+
+.email-button:active {
+    background-color: #003f7f;
+}
+
+/* Align Buttons in Download Container */
+.download-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Space between buttons */
+}
