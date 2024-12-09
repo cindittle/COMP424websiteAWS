@@ -9,7 +9,7 @@ CREATE TABLE users (
     question2 VARCHAR(255) NOT NULL,        -- Security question 2
     answer2 VARCHAR(255) NOT NULL,
     activation_token VARCHAR(255) NOT NULL, -- Token for email verification
-    is_active TINYINT(1) DEFAULT 0,         whe-- Indicates if the email is verified
+    is_active TINYINT(1) DEFAULT 0,         -- Indicates if the email is verified
     count INT DEFAULT 0,                    -- Tracks the number of times the user logged in
     last_login DATETIME,                    -- Tracks the last login date and time
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Timestamp for account creation
