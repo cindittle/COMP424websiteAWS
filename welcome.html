@@ -5,7 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
     <link rel="stylesheet" href="welcome.css">
-    <script src="welcome.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Fetch user data from welcome.php
+            fetch('welcome.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const user = data.data;
+
+                        // Update UI with user information
+                        document.getElementById('first_name').textContent = user.first_name || 'Guest';
+                        document.getElementById('login_info').innerHTML = `You have logged in <strong>${user.login_count || 0}</strong> times.`;
+                        document.getElementById('last_login').innerHTML = `Last login date: <strong>${user.last_login || 'N/A'}</strong>`;
+                    } else {
+                        console.error('Error:', data.message);
+                        // Redirect to login if not logged in
+                        window.location.href = 'index.html';
+                    }
+                })
+                .catch(error => console.error('Fetch error:', error));
+        });
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -85,8 +106,8 @@
         <h1>Welcome, <span id="first_name"></span>!</h1>
 
         <div class="user-info">
-            <p id="login_info">You have logged in <strong></strong> times.</p>
-            <p id="last_login">Last login date: <strong></strong></p>
+            <p id="login_info">You have logged in <strong>Loading...</strong> times.</p>
+            <p id="last_login">Last login date: <strong>Loading...</strong></p>
         </div>
 
         <!-- Centered Download Link -->
