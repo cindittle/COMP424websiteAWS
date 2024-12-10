@@ -1,6 +1,6 @@
 <?php
 // config.php
-$dsn = 'mysql:host=project.cac1orfaomky.us-east-1.rds.amazonaws.com;dbname=Project;charset=utf8mb4';
+$dsn = 'mysql:host=project.c5wsgw6cudhr.us-east-1.rds.amazonaws.com;dbname=Project;charset=utf8mb4';
 $username = 'admin'; // Your DB username
 $password = 'RootUserPassword123!#'; // Your DB password
 

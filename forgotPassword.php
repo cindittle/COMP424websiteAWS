@@ -2,7 +2,7 @@
 session_start();
 
 // AWS Database connection setup
-$servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";  // AWS RDS endpoint
+$servername = "project.c5wsgw6cudhr.us-east-1.rds.amazonaws.com";  // AWS RDS endpoint
 $db_username = "admin";                                           // AWS username
 $db_password = "RootUserPassword123!#";                           // AWS password
 $dbname = "Project";                                              // AWS database name

@@ -20,7 +20,7 @@ if (!isset($_SESSION['userid'])) {
 session_regenerate_id(true);
 
 // AWS Database connection
-$servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";
+$servername = "project.c5wsgw6cudhr.us-east-1.rds.amazonaws.com";
 $db_username = "admin";
 $db_password = "RootUserPassword123!#";
 $dbname = "Project";

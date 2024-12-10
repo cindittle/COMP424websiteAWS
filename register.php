@@ -3,7 +3,7 @@ session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Database connection details
-    $servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";
+    $servername = "project.c5wsgw6cudhr.us-east-1.rds.amazonaws.com";
     $db_username = "admin";
     $db_password = "RootUserPassword123!#";
     $dbname = "Project";

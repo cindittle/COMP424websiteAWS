@@ -10,7 +10,7 @@ if (!isset($_SESSION['first_name']) || empty($_SESSION['first_name'])) {
 }
 
 // AWS Database connection setup
-$servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";
+$servername = "project.c5wsgw6cudhr.us-east-1.rds.amazonaws.com";
 $username = "admin";
 $password = "RootUserPassword123!#";
 $dbname = "Project";

@@ -1,7 +1,7 @@
 <?php
 require 'vendor/autoload.php';
 
-$servername = "project.cac1orfaomky.us-east-1.rds.amazonaws.com";
+$servername = "project.c5wsgw6cudhr.us-east-1.rds.amazonaws.com";
 $username = "admin";
 $password = "RootUserPassword123!#";
 $dbname = "Project";
